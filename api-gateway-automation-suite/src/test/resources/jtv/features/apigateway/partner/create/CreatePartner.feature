@@ -104,6 +104,7 @@ Scenario Outline: POST to create enterprise partner - Primary Contact Title Vali
     | is valid                                |
     | is at maximum allowed character limit   |
 
+@current
 Scenario Outline: POST to create enterprise partner -  Primary Contact Phone Validation
     Given a Keycloak user role of ROLE_CreateMyPartnerProfile
     And an origin of jtv-partner-central

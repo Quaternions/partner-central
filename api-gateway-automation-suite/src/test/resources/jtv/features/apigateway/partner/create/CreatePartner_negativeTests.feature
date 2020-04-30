@@ -30,7 +30,7 @@ Scenario Outline: POST to create the enterprise partner - User tries to create a
     And the request contains the same legal entity name as the partner invite
     When a request is made to create a partner
     Then a response code of 404 should be returned
-    And an error message of Data exception - resource requested could not be found
+    And an error message of the resource requested could not be found
     Examples:
     | keyword            |
     | has been accepted  |
