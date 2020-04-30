@@ -1,8 +1,8 @@
 ```
 Edwin Paul Savage
 2738 Tarleton Avenue, Knoxville, TN 37914
-Mobile: (857) 523-
-Email: ​ep.savage@gmail.com
+Mobile: (857) 523 - 0548 
+Email: ep.savage@gmail.com
 ```
 ## Objective
 
@@ -47,10 +47,8 @@ TestComplete
 ● Root cause analysis
 ● Written various analysis reports
 ● Presented analysis results to customers and stakeholders
+● Designed requirements to develop specialized automated analysis tools
 ```
-## ● Designed requirements to develop specialized automated analysis tools
-
-
 ## Software Development
 
 ```
@@ -66,7 +64,7 @@ California Polytechnic State University, San Luis Obispo, California, USA
 ## Work Experience
 
 ### GRIDSMART Technologies, Knoxville, TN
-
+```
 Software Quality Assurance Engineer, January 2018 to January 2019
 ● Designed and implemented the beta test program for the GRIDSMART system
 ● Wrote and maintained tests within TargetProcess
@@ -74,9 +72,9 @@ Software Quality Assurance Engineer, January 2018 to January 2019
 ● Performed quality assurance testing for the GRIDSMART Cloud website
 ● Implemented automated tests using Tapit, an internal verification utility
 ● Wrote automation tests using cURL for the GRIDSMART API
-
+```
 ### Vendini, Inc., Boston, MA/Knoxville, TN
-
+```
 Senior Quality Assurance Engineer, May 2016 to November 2017
 Quality Assurance Engineer, March 2014 to May 2016
 ● Wrote and maintained test suites within TestRail
@@ -87,24 +85,23 @@ Selenium Web Driver
 ● Designed, implemented and maintained API automation test collection within POSTman for
 Box Office and the Vendini Member API endpoints
 ● Converted POSTman collection into a scenario file for LoadImpact (performance tool for APIs)
-
+```
 ### Wheatley Associates Ltd, Bacton, Suffolk, UK
-
+```
 Quality Assurance Engineer, May 2013 to March 2014
 ● Performed quality assurance testing and data analysis for the Equivalent Meter System (EMS)
 ● Participated in quality assurance testing for the Smart Enduring project for RWE Generation
 ● Wrote and maintained numerous automation test suites within TestComplete using C#
-
-
+```
 ### WNS Workflow Technologies, Ipswich, Suffolk, UK
-
+```
 Quality Assurance Engineer, September 2011 to May 2013
 ● Performed quality assurance testing on a multiple of insurance claim handling products
 ● Provided time estimates needed for quality assurance team to test a variety of new products
 ● Wrote and executed test cases
-
+```
 ## Naval Surface Warfare Center, Dahlgren, VA
-
+```
 Test Engineer/Data Analyst, March 2007 – January 2011
 ● Performed live functional testing of the Cooperative Engagement Capability software changes
 prior to build release
@@ -112,15 +109,15 @@ prior to build release
 Simulated (DIS) Network
 ● Designed and implemented automated functional and unit tests to calculate the performance of
 a new software developed by the United States government
-
+```
 ## Northrop Grumman, Dahlgren, VA
-
+```
 Software Developer/Data Analyst, June 2001 – March 2007
 ● Collaborated in developing an analysis tool in MS Excel to calculate the performance of
 simulated ballistic missile profiles against radar data collected during a live fire test event
 ● Member of a software team developing a full wrap around simulation to be used by the United
 States Navy for training, testing and certification of the Aegis Weapon System.
-
+```
 ## Honors/Awards
 
 ```
@@ -159,14 +156,15 @@ General
 
 Patrick Francis (Quality Assurance Director)
 Paul is one of the most technical quality assurance engineers I’ve ever worked with.
+
 Jeffrey Buziak (Test Director)
 Paul is a very proactive person who is able to present creative ideas and communicate the
 benefits. He has successfully excelled in several different programs, bringing new ideas to
 complete the workload in a more effective manner.
+
 Tina Rogers (Senior Systems Engineer)
 He developed a higher level of thinking based on the complexity of the software we were
 developing and testing. He successfully developed several analysis tools for various projects
 that reduced time and money.
-Full letters of recommendations available upon request.
 
 
