@@ -1,2 +1,6 @@
 # Introduction
-Hello, my name is Paul Savage and this is code I personally wrote for a project I worked on for JTV Technology.  This is not a complete project, so it won't compile, built or run.
+Hello!  My name is Paul Savage.  I am, currently, a Quality Assurance Engineer for JTV Technology.  I primarily write automation tests for our API Gateway for the project my scrum team is currently working on.  
+
+Our automation suite uses Gherkin for Cucumber and Java for the step definitions and business logic.  
+
+This repository contains the code I wrote for the automation tests I developed.  This is not a full project, so it will not build, compile or run.  It is only a sampling of code 
