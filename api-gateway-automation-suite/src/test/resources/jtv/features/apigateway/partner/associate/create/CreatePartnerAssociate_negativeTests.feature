@@ -3,20 +3,6 @@ Feature: POST to create a partner associate
 ########################################
 #    POST /partner/{partner-id}/associate
 ########################################
-
-Scenario: POST to create a partner associate with null access token
-    Given a Keycloak user role of ROLE_ManageMyPartnerAssociate
-    And an origin of jtv-partner-central
-    And a Keycloak user created
-    And an enterprise user already created that belongs to the current keycloak user
-    And a partner already created that has completed registration
-    And has a partner site with usage type business
-    And the current user is the primary account manager for the partner
-    And the user is granted VIEW_EDIT access to PC_ASSOCIATES in core
-    And a null access token
-    When a request is made to create a partner associate
-    Then a response code of 400 should be returned
-
 Scenario Outline: POST to create a partner associate based on keycloak roles
     Given a Keycloak user role of <kc-roles>
     And an origin of jtv-partner-central

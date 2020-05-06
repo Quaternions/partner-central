@@ -39,19 +39,6 @@ Scenario Outline: GET a list of partner associates - Keycloak roles
     | an associate                |
     | not an associate            |
 
-Scenario: GET a list of partner associates - With a null access token
-    Given a Keycloak user role of ROLE_ManageMyPartnerAssociate
-    And an origin of jtv-partner-central
-    And a Keycloak user created
-    And an enterprise user already created that belongs to the current keycloak user
-    And a partner already created that has completed registration
-    And has a partner site with usage type business
-    And the current user is the primary account manager for the partner
-    And the user is granted VIEW_EDIT access to PC_ASSOCIATES in core
-    And a null access token
-    When a request is made to get a list of associates for the partner with NO filter
-    Then a response code of 401 should be returned
-
 Scenario Outline: GET a list of partner associates - with no permissions
     Given a Keycloak user role of ROLE_ManageMyPartnerAssociate
     And an origin of jtv-partner-central
@@ -69,7 +56,6 @@ Scenario Outline: GET a list of partner associates - with no permissions
     | an associate                |
     | not an associate            |
 
-@current
 Scenario Outline: GET a list of partner associates - <uuid-keyword> UUID in the path parameter
     Given a Keycloak user role of <kc-roles>
     And an origin of jtv-partner-central

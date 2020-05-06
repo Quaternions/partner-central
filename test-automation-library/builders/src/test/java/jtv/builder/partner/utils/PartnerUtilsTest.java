@@ -31,4 +31,17 @@ class PartnerUtilsTest {
         Assert.assertNotNull(partnerCentralUser.getPassword());
 
     }
+
+    @Test
+    void testBuildPartnerCentralEmployee() {
+        PartnerUtils partnerUtils = new PartnerUtils();
+
+        PartnerCentralEmployee partnerCentralEmployee = partnerUtils.buildPartnerCentralEmployee();
+
+        Assert.assertNotNull(partnerCentralEmployee.getEmailAddress());
+        Assert.assertNotNull(partnerCentralEmployee.getPassword());
+        Assert.assertNotNull(partnerCentralEmployee.getEmployeeUserId());
+        
+        System.out.println(JsonWriter.writeObjectAsJson(partnerCentralEmployee));
+    }
 }

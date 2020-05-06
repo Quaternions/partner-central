@@ -18,6 +18,19 @@ Scenario: POST to create enterprise partner for the current keycloak user - comm
     Then a response code of 201 should be returned
     And create partner request values should be persisted correctly in the database
 
+@current
+Scenario: POST to create the enterprise partner while using a different legal entity name
+    Given a Keycloak user role of ROLE_CreateMyPartnerProfile
+    And an origin of jtv-partner-central
+    And a Keycloak user created
+    And an enterprise user already created that belongs to the current keycloak user
+    And the partner invite token is pending
+    And the request contains the same email address as the partner invite
+    And the request contains a different legal entity name as the partner invite
+    When a request is made to create a partner
+    Then a response code of 201 should be returned
+    And create partner request values should be persisted correctly in the database
+
 Scenario Outline: POST to create enterprise partner based keycloak roles
     Given a Keycloak user role of <role-keyword>
     And an origin of jtv-partner-central
@@ -104,7 +117,6 @@ Scenario Outline: POST to create enterprise partner - Primary Contact Title Vali
     | is valid                                |
     | is at maximum allowed character limit   |
 
-@current
 Scenario Outline: POST to create enterprise partner -  Primary Contact Phone Validation
     Given a Keycloak user role of ROLE_CreateMyPartnerProfile
     And an origin of jtv-partner-central
@@ -187,7 +199,7 @@ Scenario Outline: POST to create enterprise partner - Partner Site Address (Line
     And the partner invite token is pending
     And the request contains the same email address as the partner invite
     And the request contains the same legal entity name as the partner invite
-    And a partner address line one that <address-line-one-keyword>
+    And a partner site address line one that <address-line-one-keyword>
     When a request is made to create a partner
     Then a response code of 201 should be returned
     And create partner request values should be persisted correctly in the database
@@ -204,12 +216,31 @@ Scenario Outline: POST to create enterprise partner - Partner Site Address (Line
     And the partner invite token is pending
     And the request contains the same email address as the partner invite
     And the request contains the same legal entity name as the partner invite
-    And a partner address line two that <address-line-one-keyword>
+    And a partner site address line two that <address-line-two-keyword>
     When a request is made to create a partner
     Then a response code of 201 should be returned
     And create partner request values should be persisted correctly in the database
     Examples:
-    | address-line-one-keyword                |
+    | address-line-two-keyword                |
+    | is empty                                |
+    | is null                                 |
+    | is valid                                |
+    | is at maximum allowed character limit   |
+
+Scenario Outline: POST to create enterprise partner - Partner Site Address (Line Three) Validation
+    Given a Keycloak user role of ROLE_CreateMyPartnerProfile
+    And an origin of jtv-partner-central
+    And a Keycloak user created
+    And an enterprise user already created that belongs to the current keycloak user
+    And the partner invite token is pending
+    And the request contains the same email address as the partner invite
+    And the request contains the same legal entity name as the partner invite
+    And a partner site address line three that  <address-line-three-keyword>
+    When a request is made to create a partner
+    Then a response code of 201 should be returned
+    And create partner request values should be persisted correctly in the database
+    Examples:
+    | address-line-three-keyword                |
     | is empty                                |
     | is null                                 |
     | is valid                                |

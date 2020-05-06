@@ -16,19 +16,6 @@ Scenario: POST the update of an enterprise partner - validate keycloak user role
     When a request is made to update the current partner profile
     Then a response code of 403 should be returned
 
-Scenario: POST the update of an enterprise partner with no authentication header (null access token)
-    Given a Keycloak user role of ROLE_ManageMyPartnerProfile
-    And an origin of jtv-partner-central
-    And a Keycloak user created
-    And an enterprise user already created that belongs to the current keycloak user
-    And a partner already created that has completed registration
-    And has a partner site with usage type business
-    And the current user is the primary account manager for the partner
-    And the user is granted VIEW_EDIT access to PC_BUSINESS_PROFILE in core
-    And a null access token
-    When a request is made to update the current partner profile
-    Then a response code of 401 should be returned
-
 Scenario Outline: POST the update of an enterprise partner - permission validation
     Given a Keycloak user role of ROLE_ManageMyPartnerProfile
     And an origin of jtv-partner-central

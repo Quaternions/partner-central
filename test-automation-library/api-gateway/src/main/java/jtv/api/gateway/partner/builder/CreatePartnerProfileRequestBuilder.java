@@ -34,6 +34,7 @@ public class CreatePartnerProfileRequestBuilder {
 
         AddressDao addressDao = new AddressDao();
         DbAddress address = PartnerAddressCompositeDataBuilder.randomValidInstance(addressDao.getJtvJdbcTemplate()).build();
+        address.setAddressLine3(DataGenerator.AddressGenerator.generateAddressLineTwo());
         log.info("address (randomValidInstance) = " + address.toString());
         String subdivisionIsoCode = DbStateProvinceQueryBuilder.defaultInstance(addressDao.getJtvJdbcTemplate()).withStateProvinceId(address.getStateProvinceId()).queryForObject().getFullIsoCode();
         String countryIso3Code = DbCountryQueryBuilder.defaultInstance(addressDao.getJtvJdbcTemplate()).withCountryId(address.getCountryId()).queryForObject().getIsoAlpha3Code();
@@ -69,7 +70,7 @@ public class CreatePartnerProfileRequestBuilder {
                         , legalName + UUID.randomUUID().toString().substring(0, 12)
                         )
                 );
-        log.info("[CreatePartnerProfileRequestBuilder::buildBaseRequest] baseRequestBody = " + baseRequestBody.toJsonString());
+        log.debug("[CreatePartnerProfileRequestBuilder::buildBaseRequest] baseRequestBody = " + baseRequestBody.toJsonString());
         return baseRequestBody;
     }
 }

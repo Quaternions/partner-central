@@ -1,5 +1,6 @@
 package jtv.glue.stepdefinitions.apigateway.user.update;
 
+import com.jtv.test.db.entity.entitlement.DbUserAccount;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
@@ -15,6 +16,7 @@ import jtv.data.generator.DataGenerator;
 import jtv.exception.KeywordNotDefinedException;
 import jtv.glue.apigateway.user.BaseUserAccountGlue;
 import jtv.keycloak.utility.KeycloakUtilityFunctions;
+import org.assertj.core.internal.bytebuddy.utility.RandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +29,7 @@ public class UpdateUserAccountStepDefinitions extends BaseUserAccountGlue {
     private static String parameter;
     private static String value;
     private static UserAccountDao userAccountDao = new UserAccountDao();
-    DatabaseUserAccount dbUserAccount = new DatabaseUserAccount();
+    DatabaseUserAccount databaseUserAccount = new DatabaseUserAccount();
 
     private final KeycloakUtilityFunctions keycloakUtilityFunctions = new KeycloakUtilityFunctions();
 
@@ -39,7 +41,6 @@ public class UpdateUserAccountStepDefinitions extends BaseUserAccountGlue {
 
     @Before
     public void initializeLocalVariables() {
-        log.info("[initializeLocalVariables] Initializing all the variables for the update user account tests.");
         updateUserRequestBody = new UpdateUserRequest();
         updatedUser = new UpdateUser();
 
@@ -54,25 +55,25 @@ public class UpdateUserAccountStepDefinitions extends BaseUserAccountGlue {
             case "firstname": {
                 parameter = keyword;
                 value = DataGenerator.NameGenerator.generateFirstName();
-                dbUserAccount.setFirstName(value);
+                databaseUserAccount.setFirstName(value);
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
             case "lastname": {
                 parameter = keyword;
                 value = DataGenerator.NameGenerator.generateLastName();
-                dbUserAccount.setLastName(value);
+                databaseUserAccount.setLastName(value);
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
             case "username": {
                 parameter = keyword;
                 value = DataGenerator.NameGenerator.generateEmailAddress();
-                dbUserAccount.setUserName(value);
+                databaseUserAccount.setUserName(value);
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
             default: {
@@ -82,9 +83,52 @@ public class UpdateUserAccountStepDefinitions extends BaseUserAccountGlue {
         logAndReportRequest();
     }
 
+    @And("^the user needs to update their user account first name with (.*)$")
+    public void updateUserFirstName(String keyword) throws KeywordNotDefinedException, IOException {
+        DbUserAccount dbUserAccount;
+        dbUserAccount = getPartnerContext().getDbUserAccount();
+
+        if(keyword.isEmpty() || keyword == null) {
+            throw new KeywordNotDefinedException(keyword,"Keyword for updating the first name");
+        }
+
+        parameter = "firstname";
+
+        switch (keyword.toLowerCase()) {
+            case "a null": {
+                dbUserAccount.setFirstName(null);
+                break;
+            }
+            case "an empty string": {
+                databaseUserAccount.setFirstName("");
+                break;
+            }
+            case "too many characters": {
+                databaseUserAccount.setFirstName(RandomString.make(51));
+                log.info("dbUserAccount.getFirstName = " + databaseUserAccount.getFirstName());
+                break;
+            }
+
+        }
+        updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, databaseUserAccount.getFirstName());
+
+
+        /*
+            case "firstname": {
+                parameter = keyword;
+                value = DataGenerator.NameGenerator.generateFirstName();
+                dbUserAccount.setFirstName(value);
+                updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                break;
+            }
+
+         */
+    }
+
     @And("the updated user account information should be persistent in the database")
     public void assertUpdatedUserAccount() {
-        logAndAssert(UserAccountAsserter.assertUpdateUserAccount(dbUserAccount));
+        logAndAssert(UserAccountAsserter.assertUpdateUserAccount(databaseUserAccount));
     }
 
     @When("^a request is made to update the enterprise user account$")
@@ -107,7 +151,7 @@ public class UpdateUserAccountStepDefinitions extends BaseUserAccountGlue {
             buildBaseRequest();
         }
 
-        setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(),updateUserRequestBody.toString()));
+        setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(),updateUserRequestBody.toString()));
         logAndReportRequest();
     }
 
@@ -119,46 +163,42 @@ public class UpdateUserAccountStepDefinitions extends BaseUserAccountGlue {
                 parameter = "firstname";
                 value = null;
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
             case "empty firstname": {
                 parameter = "firstname";
                 value = "";
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
             case "null lastname": {
                 parameter = "lastname";
                 value = null;
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
             case "empty lastname": {
                 parameter = "lastname";
                 value = "";
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
             case "null username": {
                 parameter = "username";
                 value = null;
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
             case "empty username": {
                 parameter = "username";
                 value = "";
                 updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(),parameter, value);
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
-                break;
-            }
-            case "a null access token": {
-                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(dbUserAccount.getJtvUuid(), null, getContentType(), updateUserRequestBody.toString()));
+                setApiGatewayResponse(getApiGatewayClient().user().updateUserAccount(databaseUserAccount.getJtvUuid(), getAccessToken(), getContentType(), updateUserRequestBody.toString()));
                 break;
             }
         }
@@ -195,7 +235,7 @@ public class UpdateUserAccountStepDefinitions extends BaseUserAccountGlue {
 
     private void buildBaseRequest() throws IOException {
         updateUserRequestBody = UpdateUserRequestBuilder.buildUpdateUserRequest(getAccessToken(), parameter, value);
-        dbUserAccount = userAccountDao.getUserAccountByKeycloakUuid(getKeycloakUuid());
+        databaseUserAccount = userAccountDao.getUserAccountByKeycloakUuid(getKeycloakUuid());
     }
 
     @And("^an existing user account with the same first and last names$")
@@ -224,7 +264,7 @@ public class UpdateUserAccountStepDefinitions extends BaseUserAccountGlue {
                                                         keycloakUtilityFunctions.getPreferredUsernameFromToken(getAccessToken())
                                                         );
 
-        dbUserAccount = userAccountDao.getUserAccountByKeycloakUuid(getKeycloakUuid());
+        databaseUserAccount = userAccountDao.getUserAccountByKeycloakUuid(getKeycloakUuid());
 
         // set the parameter & value variables to something other than null so the request body isn't rebuilt in the updateEnterpriseUserAccount step definitions
         parameter = "not null";

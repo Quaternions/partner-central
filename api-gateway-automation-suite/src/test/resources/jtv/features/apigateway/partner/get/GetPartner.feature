@@ -17,15 +17,6 @@ Scenario: GET the enterprise partner
     Then a response code of 200 should be returned
     And the response body contains the correct partner information
 
-Scenario: GET the enterprise partner without an authentication token
-    Given a Keycloak user role of ROLE_ViewMyPartnerProfile
-    And an origin of jtv-partner-central
-    And a Keycloak user created
-    And an enterprise user already created that belongs to the current keycloak user
-    And a null access token
-    When a request is made to get the partner using the partner uuid
-    Then a response code of 401 should be returned
-
 Scenario Outline: GET the enterprise partner using various keycloak roles - <roles>
     Given a Keycloak user role of <roles>
     And an origin of jtv-partner-central

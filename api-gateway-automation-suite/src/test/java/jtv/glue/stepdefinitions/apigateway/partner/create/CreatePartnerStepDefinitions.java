@@ -222,8 +222,8 @@ public class CreatePartnerStepDefinitions extends BasePartnerGlue {
         );
     }
 
-    @Given("^a partner address line one that (.*)$")
-    public void setPartnerAddressLineOneKeyword(String keyword) throws KeywordNotDefinedException, IOException {
+    @Given("^a partner site address line one that (.*)$")
+    public void setPartnerSiteAddressLineOneKeyword(String keyword) throws KeywordNotDefinedException, IOException {
         if (createPartnerRequestBody == null) {
             buildRequest();
         }
@@ -238,8 +238,8 @@ public class CreatePartnerStepDefinitions extends BasePartnerGlue {
         );
     }
 
-    @Given("^a partner address line two that (.*)$")
-    public void setPartnerAddressLineTwoKeyword(String keyword) throws KeywordNotDefinedException, IOException {
+    @Given("^a partner site address line two that (.*)$")
+    public void setPartnerSiteAddressLineTwoKeyword(String keyword) throws KeywordNotDefinedException, IOException {
         if (createPartnerRequestBody == null) {
             buildRequest();
         }
@@ -250,6 +250,22 @@ public class CreatePartnerStepDefinitions extends BasePartnerGlue {
                         , createPartnerRequestBody.getCreatePartnerProfile().getPartnerSites().get(0).getAddress().getAddressLineTwo()
                         , 240
                         , "create partner address line two"
+                )
+        );
+    }
+
+    @Given("^a partner site address line three that  (.*)$")
+    public void setPartnerAddressLineThreeKeyword(String keyword) throws KeywordNotDefinedException, IOException {
+        if (createPartnerRequestBody == null) {
+            buildRequest();
+        }
+        createPartnerRequestBody.getCreatePartnerProfile().getPartnerSites().get(0).getAddress().setAddressLineTwo(
+                ParameterUtils.generateParameterFromKeyword(
+                        "addressLineThree"
+                        , keyword
+                        , createPartnerRequestBody.getCreatePartnerProfile().getPartnerSites().get(0).getAddress().getAddressLineTwo()
+                        , 240
+                        , "create partner address line three"
                 )
         );
     }

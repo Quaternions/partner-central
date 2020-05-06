@@ -24,6 +24,7 @@ public class GetUserAccountStepDefinitions extends BaseUserAccountGlue {
 
     @When("^a request is made to get the user's enterprise account$")
     public void makeGetUserAccountRequest() {
+        log.info("[makeGetUserAccountRequest] getContext.getAccessToken = " + getContext().getAccessToken());
         setApiGatewayResponse(getApiGatewayClient().user().getUserAccount(getContext().getAccessToken(), getContentType()));
         logAndReportRequest();
     }

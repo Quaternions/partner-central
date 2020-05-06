@@ -411,13 +411,20 @@ public class PartnerProfileAsserter {
     private static Assertion mapAndAssertPartnerSiteAddress(SiteAddress createOrUpdatePartnerAddress, PartnerProfileServiceSiteAddress getPartnerAddress) {
         DbAddress actualAddress = new DbAddress();
         DbAddress expectedAddress = new DbAddress();
+        boolean addressLineTwoEmpty;
+        boolean addressLineThreeEmpty;
 
-        if (getPartnerAddress == null) { //
+        // we are asserting on the createOrUpdatePartnerAddress entity
+        if (getPartnerAddress == null) {
+            addressLineTwoEmpty = createOrUpdatePartnerAddress.getAddressLineTwo() == null || createOrUpdatePartnerAddress.getAddressLineTwo().isEmpty();
+            addressLineThreeEmpty = createOrUpdatePartnerAddress.getAddressLineThree() == null || createOrUpdatePartnerAddress.getAddressLineThree().isEmpty();
             expectedAddress = mapCreateOrUpdatePartnerRequestToDbAddress(createOrUpdatePartnerAddress);
-            // if the address line two is empty or null, then query the db without address line 2.
-            if (createOrUpdatePartnerAddress.getAddressLineTwo() == null || createOrUpdatePartnerAddress.getAddressLineTwo().isEmpty()) {
+
+            if (addressLineTwoEmpty) {
+                // if the address line two is empty or null, then query the db without address line 2.
                 actualAddress = DbAddressQueryBuilder.defaultInstance(getJdbcTemplate())
                         .withAddressLine1(createOrUpdatePartnerAddress.getAddressLineOne())
+                        .withAddressLine3(createOrUpdatePartnerAddress.getAddressLineThree())
                         .withCity(createOrUpdatePartnerAddress.getCity())
                         .withPostalCode(createOrUpdatePartnerAddress.getPostalCode())
                         .withStateProvinceId(DbStateProvinceQueryBuilder.defaultInstance(getJdbcTemplate())
@@ -429,8 +436,9 @@ public class PartnerProfileAsserter {
                                 .queryForObject()
                                 .getCountryId()
                         ).queryForObject();
-            } else {
-                // otherwise use the address line 2 in the query
+
+            } else if (addressLineThreeEmpty) {
+                // if the address line three is empty or null, don't use it in the query
                 actualAddress = DbAddressQueryBuilder.defaultInstance(getJdbcTemplate())
                         .withAddressLine1(createOrUpdatePartnerAddress.getAddressLineOne())
                         .withAddressLine2(createOrUpdatePartnerAddress.getAddressLineTwo())
@@ -445,30 +453,58 @@ public class PartnerProfileAsserter {
                                 .queryForObject()
                                 .getCountryId()
                         ).queryForObject();
+            } else {
+                // otherwise use all the address lines in the query
+                actualAddress = DbAddressQueryBuilder.defaultInstance(getJdbcTemplate())
+                        .withAddressLine1(createOrUpdatePartnerAddress.getAddressLineOne())
+                        .withAddressLine2(createOrUpdatePartnerAddress.getAddressLineTwo())
+                        .withAddressLine3(createOrUpdatePartnerAddress.getAddressLineThree())
+                        .withCity(createOrUpdatePartnerAddress.getCity())
+                        .withPostalCode(createOrUpdatePartnerAddress.getPostalCode())
+                        .withStateProvinceId(DbStateProvinceQueryBuilder.defaultInstance(getJdbcTemplate())
+                                .withFullIsoCode(createOrUpdatePartnerAddress.getSubdivisionIsoCode())
+                                .queryForObject()
+                                .getStateProvinceId()
+                        ).withCountryId(DbCountryQueryBuilder.defaultInstance(getJdbcTemplate())
+                                .withIsoAlpha3Code(createOrUpdatePartnerAddress.getCountryIso3Code())
+                                .queryForObject()
+                                .getCountryId()
+                        ).queryForObject();
             }
-
-        }
-        else if (createOrUpdatePartnerAddress == null) {
+        } else if (createOrUpdatePartnerAddress == null) {
+            addressLineTwoEmpty = getPartnerAddress.getAddressLineTwo() == null || getPartnerAddress.getAddressLineTwo().isEmpty();
+            addressLineThreeEmpty = getPartnerAddress.getAddressLineThree() == null || getPartnerAddress.getAddressLineThree().isEmpty();
             expectedAddress = mapGetPartnerResponseToDbAddress(getPartnerAddress);
-            // if the address line 2 is empty or null, then query the db without it
-            if (getPartnerAddress.getAddressLineTwo() == null || getPartnerAddress.getAddressLineTwo().equals("")) {
+
+            if (addressLineTwoEmpty) {
+                // if the address line 2 is empty or null, then query the db without it
                 actualAddress = DbAddressQueryBuilder.defaultInstance(getJdbcTemplate())
                         .withAddressLine1(getPartnerAddress.getAddressLineOne())
+                        .withAddressLine3(getPartnerAddress.getAddressLineThree())
                         .withCity(getPartnerAddress.getCity())
                         .withPostalCode(getPartnerAddress.getPostalCode())
                         .queryForObject();
-
-            } else {
-                // otherwise us it in the query
+            } else if (addressLineThreeEmpty) {
+                // if the address line 3 is empty or null, then query the db without it
                 actualAddress = DbAddressQueryBuilder.defaultInstance(getJdbcTemplate())
                         .withAddressLine1(getPartnerAddress.getAddressLineOne())
                         .withAddressLine2(getPartnerAddress.getAddressLineTwo())
                         .withCity(getPartnerAddress.getCity())
                         .withPostalCode(getPartnerAddress.getPostalCode())
                         .queryForObject();
+            } else {
+                // otherwise us it in the query
+                actualAddress = DbAddressQueryBuilder.defaultInstance(getJdbcTemplate())
+                        .withAddressLine1(getPartnerAddress.getAddressLineOne())
+                        .withAddressLine2(getPartnerAddress.getAddressLineTwo())
+                        .withAddressLine3(getPartnerAddress.getAddressLineThree())
+                        .withCity(getPartnerAddress.getCity())
+                        .withPostalCode(getPartnerAddress.getPostalCode())
+                        .queryForObject();
             }
         }
-
+        log.info("expectedAddress = " + expectedAddress.toString());
+        log.info("actualAddress = " + actualAddress.toString());
         return assertPartnerSiteAddress(expectedAddress, actualAddress);
     }
     //</editor-fold>
@@ -522,6 +558,7 @@ public class PartnerProfileAsserter {
 
         address.setAddressLine1(partnerSiteAddress.getAddressLineOne());
         address.setAddressLine2(partnerSiteAddress.getAddressLineTwo());
+        address.setAddressLine3(partnerSiteAddress.getAddressLineThree());
         address.setCity(partnerSiteAddress.getCity());
         address.setCountryId(DbCountryQueryBuilder.defaultInstance(getJdbcTemplate())
                     .withIsoAlpha2Code(partnerSiteAddress.getCountryIso3Code())
@@ -595,6 +632,7 @@ public class PartnerProfileAsserter {
         DbAddress address = new DbAddress();
         address.setAddressLine1(siteAddress.getAddressLineOne());
         address.setAddressLine2(siteAddress.getAddressLineTwo());
+        address.setAddressLine3(siteAddress.getAddressLineThree());
         address.setCity(siteAddress.getCity());
         address.setStateProvinceId(
                 DbStateProvinceQueryBuilder.defaultInstance(getJdbcTemplate())
@@ -734,6 +772,12 @@ public class PartnerProfileAsserter {
             assertions = AssertionUtilityFunctions.assertValues(assertions, "Site Address for Partner (" + partnerUuid + ") - Address Line Two", expectedAddress.getAddressLine2().equals("")? null : expectedAddress.getAddressLine2(), actualAddress.getAddressLine2());
         } catch (NullPointerException e) {
             assertions = AssertionUtilityFunctions.assertValues(assertions, "Site Address for Partner (" + partnerUuid + ") - Address Line Two", null, null);
+        }
+
+        try  {
+            assertions = AssertionUtilityFunctions.assertValues(assertions, "Site Address for Partner (" + partnerUuid + ") - Address Line Three", expectedAddress.getAddressLine3().equals("")? null : expectedAddress.getAddressLine3(), actualAddress.getAddressLine3());
+        } catch (NullPointerException e) {
+            assertions = AssertionUtilityFunctions.assertValues(assertions, "Site Address for Partner (" + partnerUuid + ") - Address Line Three", null, null);
         }
 
         assertions = AssertionUtilityFunctions.assertValues(assertions, "Site Address for Partner (" + partnerUuid + ") - City", expectedAddress.getCity(), actualAddress.getCity());

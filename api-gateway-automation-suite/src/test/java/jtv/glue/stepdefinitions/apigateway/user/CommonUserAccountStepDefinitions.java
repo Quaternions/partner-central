@@ -1,5 +1,7 @@
 package jtv.glue.stepdefinitions.apigateway.user;
 
+import com.jtv.test.db.entity.entitlement.DbUserAccount;
+import com.jtv.test.db.query.entitlement.DbUserAccountQueryBuilder;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -78,6 +80,8 @@ public class CommonUserAccountStepDefinitions extends BaseUserAccountGlue {
         );
 
         userAccount = userAccountDao.getUserAccountByKeycloakUuid(keycloakUuid);
+        DbUserAccount dbUserAccount = DbUserAccountQueryBuilder.defaultInstance(userAccountDao.getJtvJdbcTemplate()).withUserAccountId(userAccount.getUserId().longValue()).queryForObject();
+        getPartnerContext().setDbUserAccount(dbUserAccount);
     }
 
     @When("^a request is made to get user account by JTV UUID with a uuid that is (.*)$")
